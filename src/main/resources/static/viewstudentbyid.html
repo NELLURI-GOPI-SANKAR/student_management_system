@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>View Student By ID</title>
+</head>
+<body>
+  <h1>View Student Details</h1>
+  <input type="number" id="studentId" placeholder="Enter ID" required>
+  <button onclick="getStudent()">Get Student</button>
+  <div id="result"></div>
+
+  <script>
+    const apiUrl = "http://localhost:8081";
+
+    async function getStudent() {
+      const id = document.getElementById("studentId").value;
+      const res = await fetch(`${apiUrl}/byid/${id}`);
+      if (res.ok) {
+        const student = await res.json();
+        document.getElementById("result").innerHTML = `
+          <p><strong>Name:</strong> ${student.name}</p>
+          <p><strong>Email:</strong> ${student.email}</p>
+          <p><strong>Department:</strong> ${student.department}</p>`;
+      } else {
+        document.getElementById("result").innerText = "Student not found!";
+      }
+    }
+  </script>
+</body>
+</html>

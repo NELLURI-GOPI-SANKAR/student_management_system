@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Update Student</title>
+</head>
+<body>
+  <h1>Update Student Details</h1>
+  <form id="updateForm">
+    <input type="number" id="id" placeholder="Enter ID" required><br>
+    <input type="text" id="name" placeholder="Enter Name" required><br>
+    <input type="email" id="email" placeholder="Enter Email" required><br>
+    <input type="text" id="department" placeholder="Enter Department" required><br>
+    <input type="submit" value="Update Student">
+  </form>
+
+  <script>
+    const apiUrl = "http://localhost:8081";
+
+    document.getElementById("updateForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const id = document.getElementById("id").value;
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const department = document.getElementById("department").value;
+
+      const student = { name, email, department };
+
+      const res = await fetch(`${apiUrl}/update/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(student)
+      });
+
+      if (res.ok) {
+        alert("Student updated successfully!");
+        e.target.reset();
+      } else {
+        alert("Failed to update student.");
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System - Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Background Pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M20 20h10v10h-10zm50 0h10v10h-10zm-25 25h10v10h-10zm50 0h10v10h-10zm-75 25h10v10h-10zm25 0h10v10h-10zm50 0h10v10h-10z" fill="rgba(255,255,255,0.1)"/></svg>');
+            background-size: 200px 200px;
+            pointer-events: none;
+            z-index: -19;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Floating Elements */
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-book {
+            position: absolute;
+            font-size: 2rem;
+            color: rgba(255, 255, 255, 0.1);
+            animation: floatBook 15s linear infinite;
+        }
+
+        .floating-book:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .floating-book:nth-child(2) { top: 20%; right: 10%; animation-delay: 5s; }
+        .floating-book:nth-child(3) { top: 60%; left: 5%; animation-delay: 10s; }
+        .floating-book:nth-child(4) { top: 80%; right: 20%; animation-delay: 2s; }
+        .floating-book:nth-child(5) { top: 40%; left: 80%; animation-delay: 7s; }
+
+        @keyframes floatBook {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(180deg); }
+            100% { transform: translateY(0px) rotate(360deg); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, #ffd700, #ffed4e);
+            border-radius: 2px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            font-weight: 300;
+        }
+
+        .nav-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            text-decoration: none;
+            color: white;
+            font-size: 1.3rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .nav-links a:hover::before {
+            left: 100%;
+        }
+
+        .nav-links a:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .nav-links a:active {
+            transform: translateY(-5px);
+        }
+
+        .nav-links a .icon {
+            font-size: 2rem;
+            margin-right: 1rem;
+        }
+
+        /* Special styling for each link */
+        .nav-links a:nth-child(1) { --accent-color: #4CAF50; }
+        .nav-links a:nth-child(2) { --accent-color: #2196F3; }
+        .nav-links a:nth-child(3) { --accent-color: #FF9800; }
+        .nav-links a:nth-child(4) { --accent-color: #9C27B0; }
+        .nav-links a:nth-child(5) { --accent-color: #f44336; }
+
+        .nav-links a:hover {
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3), 0 0 20px var(--accent-color);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .nav-links a {
+                padding: 1.5rem;
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .nav-links a {
+                padding: 1rem;
+                font-size: 1rem;
+            }
+            
+            .nav-links a .icon {
+                font-size: 1.5rem;
+                margin-right: 0.5rem;
+            }
+        }
+
+        /* Loading Animation */
+        .nav-links a {
+            animation: slideUp 0.6s ease forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .nav-links a:nth-child(1) { animation-delay: 0.1s; }
+        .nav-links a:nth-child(2) { animation-delay: 0.2s; }
+        .nav-links a:nth-child(3) { animation-delay: 0.3s; }
+        .nav-links a:nth-child(4) { animation-delay: 0.4s; }
+        .nav-links a:nth-child(5) { animation-delay: 0.5s; }
+
+        @keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header Animation */
+        h1, .subtitle {
+            animation: fadeInDown 1s ease forwards;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-elements">
+        <div class="floating-book">📚</div>
+        <div class="floating-book">📖</div>
+        <div class="floating-book">📝</div>
+        <div class="floating-book">🎓</div>
+        <div class="floating-book">📊</div>
+    </div>
+
+    <div class="container">
+        <h1>Student Management System</h1>
+        <p class="subtitle">Comprehensive Student Information Management Dashboard</p>
+        
+        <div class="nav-links">
+            <a href="addstudent.html">
+                <span class="icon">➕</span>
+                Add New Student
+            </a>
+            <a href="viewallstudents.html">
+                <span class="icon">📋</span>
+                View All Students
+            </a>
+            <a href="viewstudentbyid.html">
+                <span class="icon">🔍</span>
+                Search Student by ID
+            </a>
+            <a href="updatestudent.html">
+                <span class="icon">✏️</span>
+                Update Student Info
+            </a>
+            <a href="deletestudent.html">
+                <span class="icon">🗑️</span>
+                Remove Student
+            </a>
+        </div>
+    </div>
+</body>
+</html>
